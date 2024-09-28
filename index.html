@@ -1,164 +1,138 @@
 !DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Website Baca Cerita</title>
+    <title>Website Cerita</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #f4f4f4;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #f9f9f9, #e0e0e0);
-            color: #333;
-            line-height: 1.6;
-        }
-
         header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-        nav {
-            margin: 15px 0;
-        }
-
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
         main {
-            display: flex;
-            justify-content: space-around;
             padding: 20px;
-            flex-wrap: wrap;
         }
-
-        #story-list {
-            flex: 1;
-            min-width: 250px;
-            margin-right: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        #story-list h2 {
-            background-color: #4CAF50;
+        button {
+            padding: 8px 15px;
+            background-color: #007bff;
             color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        #story-list ul {
-            list-style-type: none;
-            padding: 10px;
-        }
-
-        #story-list ul li {
-            padding: 10px;
-            margin: 5px 0;
-            cursor: pointer;
-            background-color: #f0f0f0;
+            border: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            cursor: pointer;
         }
-
-        #story-list ul li:hover {
-            background-color: #ddd;
+        .comment-section {
+            margin-top: 20px;
         }
-
-        #story-content {
-            flex: 2;
-            min-width: 300px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        input {
+            width: calc(100% - 90px);
+            padding: 8px;
+            margin-right: 10px;
         }
-
-        #story-content h2 {
-            margin-bottom: 10px;
-        }
-
         footer {
             text-align: center;
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            position: relative;
-            bottom: 0;
+            padding: 10px 0;
+            background: #333;
+            color: #fff;
+            position: fixed;
             width: 100%;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Website Baca Cerita</h1>
-        <nav>
-            <a href="#">Beranda</a>
-            <a href="#">Tentang</a>
-            <a href="#">Kontak</a>
-        </nav>
-        <p>Pilih cerita favoritmu dan mulai membaca!</p>
+        <h1>Website Cerita</h1>
     </header>
-
     <main>
-        <section id="story-list">
-            <h2>Daftar Cerita</h2>
-            <ul>
-                <li onclick="showStory(1)">Pertempuran Terakhir</li>
-                <li onclick="showStory(2)">Misteri di Balik Hutan Gelap</li>
-                <li onclick="showStory(3)">Petualangan di Dunia Fantasi</li>
-            </ul>
-        </section>
+        <h2>Daftar Cerita</h2>
+        <ul id="story-list"></ul>
 
-        <section id="story-content">
-            <h2>Judul Cerita</h2>
-            <div id="content">
-                <p>Klik cerita untuk mulai membaca.</p>
+        <div id="story-view" style="display:none;">
+            <h2 id="story-title"></h2>
+            <p id="story-content"></p>
+            <div class="comment-section">
+                <h3>Komentar</h3>
+                <ul id="comment-list"></ul>
+                <input type="text" id="comment-input" placeholder="Tulis komentar...">
+                <button onclick="addComment()">Kirim</button>
+                <button onclick="goBack()">Kembali</button>
             </div>
-        </section>
+        </div>
     </main>
-
     <footer>
-        <p>&copy; 2024 Website Baca Cerita. Dibuat dengan cinta.</p>
+        <p>&copy; 2024 Website Cerita</p>
     </footer>
-
     <script>
-        function showStory(storyNumber) {
-            let title = document.querySelector("#story-content h2");
-            let content = document.getElementById("content");
+        // Data cerita
+        const stories = [
+            { title: "Cerita Pertama", content: "Dani dan Keysa, pasangan yang baru menikah, hidup bahagia di rumah sederhana peninggalan orang tua Dani. Meski tak mewah, mereka saling mencintai dan mendukung. Suatu hari, saat hujan deras, mereka terkurung di rumah dan berbincang tentang masa depan mereka. Setelah hujan reda, mereka berjalan di sawah, dan Dani menangkap Keysa yang hampir terpeleset. Momen itu memperkuat cinta mereka, dan mereka berjanji untuk selalu saling menjaga, apapun rintangan yang akan datang..", comments: [] },
+            { title: "Cerita Kedua", content: "Raka, siswa pendiam, diam-diam menyukai Alya, gadis ceria dan populer di sekolah. Saat mereka bekerja sama dalam acara pentas seni, Alya mulai menghargai ketelitian Raka, dan Raka semakin menyukai Alya. Setelah berbagi momen-momen pribadi, Raka mengungkapkan perasaannya. Alya, yang juga mulai merasakan hal yang sama, menerima perasaan Raka. Hubungan mereka perlahan berkembang, meski belum resmi, membawa mereka lebih dekat dalam kisah cinta remaja yang tumbuh alami..", comments: [] },
+        ];
 
-            switch(storyNumber) {
-                case 1:
-                    title.innerText = "Pertempuran Terakhir";
-                    content.innerHTML = "<p>Di Eldoria, penduduk hidup dalam ketakutan akibat serangan monster raksasa bernama Kael. Arlan, seorang mantan prajurit yang kehilangan keluarganya, mengumpulkan kelompok berani untuk melawan Kael dengan senjata berbasis cahaya. Mira, penyihir muda, mengorbankan kekuatannya untuk menciptakan senjata itu. Arlan berhasil mengalahkan Kael, tetapi Mira hilang. Setelahnya, Arlan dan kelompoknya bertekad melatih generasi baru untuk menghadapi ancaman selanjutnya...</p>";
-                    break;
-                case 2:
-                    title.innerText = "Misteri di Balik Hutan Gelap";
-                    content.innerHTML = "<p>Suatu hari, sekelompok penjelajah menemukan hutan yang tak biasa, dengan suasana mencekam. Mereka mendengar suara aneh dan menemukan jejak yang misterius, membawa mereka pada petualangan yang tidak akan pernah mereka lupakan.</p>";
-                    break;
-                case 3:
-                    title.innerText = "Petualangan di Dunia Fantasi";
-                    content.innerHTML = "<p>Ada dunia di balik cermin, tempat petualangan menunggu siapa pun yang berani masuk. Di sana, mereka bertemu makhluk ajaib dan menghadapi tantangan yang menguji keberanian dan persahabatan mereka.</p>";
-                    break;
-                default:
-                    title.innerText = "Judul Cerita";
-                    content.innerHTML = "<p>Klik cerita untuk mulai membaca.</p>";
+        // Menampilkan daftar cerita
+        function displayStories() {
+            const storyList = document.getElementById('story-list');
+            stories.forEach((story, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>${story.title}</strong>
+                    <button onclick="openStory(${index})">Baca Selengkapnya</button>
+                `;
+                storyList.appendChild(li);
+            });
+        }
+
+        // Membuka cerita
+        function openStory(index) {
+            document.getElementById('story-view').style.display = 'block';
+            document.getElementById('story-list').style.display = 'none';
+            const story = stories[index];
+            document.getElementById('story-title').textContent = story.title;
+            document.getElementById('story-content').textContent = story.content;
+            displayComments(index);
+        }
+
+        // Menampilkan komentar
+        function displayComments(index) {
+            const commentList = document.getElementById('comment-list');
+            commentList.innerHTML = ''; // Hapus komentar lama
+            stories[index].comments.forEach(comment => {
+                const li = document.createElement('li');
+                li.textContent = comment;
+                commentList.appendChild(li);
+            });
+        }
+
+        // Menambahkan komentar
+        function addComment() {
+            const index = stories.findIndex(story => story.title === document.getElementById('story-title').textContent);
+            const commentInput = document.getElementById('comment-input');
+            const comment = commentInput.value.trim();
+            if (comment) {
+                stories[index].comments.push(comment);
+                displayComments(index);
+                commentInput.value = ''; // Kosongkan input
+            } else {
+                alert("Komentar tidak boleh kosong!");
             }
         }
+
+        // Kembali ke daftar cerita
+        function goBack() {
+            document.getElementById('story-view').style.display = 'none';
+            document.getElementById('story-list').style.display = 'block';
+        }
+
+        // Panggil fungsi untuk menampilkan cerita
+        displayStories();
     </script>
 </body>
 </html>
